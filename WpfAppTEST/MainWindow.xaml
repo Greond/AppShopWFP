@@ -1,0 +1,55 @@
+﻿<Window x:Class="WpfAppTEST.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfAppTEST"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Style="{StaticResource MaterialDesignWindow}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"  ItemsSource="{Binding Products}" x:Name="MainDataGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedProduct}">
+            <DataGrid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.183"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </DataGrid.RenderTransform>
+        </DataGrid>
+
+        <Border Grid.Column="0" Grid.Row="1" >
+            <StackPanel  DataContext="{Binding SelectedProduct}" Margin="2" >
+
+                <StackPanel.Resources>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}" />
+                </StackPanel.Resources>
+                    
+                <TextBlock Text="Выбранный элемент" Style="{StaticResource MaterialDesignHeadline6TextBlock}"/>
+                <TextBlock Text="ID" />
+                <TextBlock Text="{Binding ID}" Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
+                <TextBlock Text="Наименование"  />
+                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Описание" />
+                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Цена" />
+                <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Цена со скидкой" />
+                <TextBox Text="{Binding OldPrice, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Window>
