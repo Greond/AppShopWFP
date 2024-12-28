@@ -18,7 +18,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"  ItemsSource="{Binding Products}" x:Name="MainDataGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedProduct}">
+        <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"  ItemsSource="{Binding Products}" x:Name="MainDataGrid" 
+                  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedProduct}" CanUserAddRows="False">
             <DataGrid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -30,26 +31,67 @@
         </DataGrid>
 
         <Border Grid.Column="0" Grid.Row="1" >
-            <StackPanel  DataContext="{Binding SelectedProduct}" Margin="2" >
+            <StackPanel x:Name="ElementPanel" DataContextChanged="ElementPanel_DataContextChanged"  DataContext="{Binding SelectedProduct}" Margin="2" >
 
                 <StackPanel.Resources>
                     <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
                     <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}" />
                 </StackPanel.Resources>
-                    
+
                 <TextBlock Text="Выбранный элемент" Style="{StaticResource MaterialDesignHeadline6TextBlock}"/>
+                <Separator Opacity="0" Height="10"/>
                 <TextBlock Text="ID" />
                 <TextBlock Text="{Binding ID}" Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
+                <Separator Opacity="0" Height="5"/>
                 <TextBlock Text="Наименование"  />
                 <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                <Separator Opacity="0" Height="5"/>
                 <TextBlock Text="Описание" />
                 <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+                <Separator Opacity="0" Height="5"/>
                 <TextBlock Text="Цена" />
                 <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
+                <Separator Opacity="0" Height="5"/>
                 <TextBlock Text="Цена со скидкой" />
                 <TextBox Text="{Binding OldPrice, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </Border>
+        <Border BorderBrush="#FF673AB7" BorderThickness="1" Grid.Column="1" Margin="5,10,10,10" CornerRadius="10"  Grid.Row="1" >
+            <Grid Margin="0,0,-2,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="125*"/>
+                    <ColumnDefinition Width="132*"/>
+                    <ColumnDefinition Width="128*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="58*"/>
+                    <RowDefinition Height="100*"/>
+                    <RowDefinition Height="57*"/>
+                </Grid.RowDefinitions>
+                <Button Style="{StaticResource MaterialDesignFloatingActionButton}" FontSize="14" Grid.Row="1" x:Name="RegreshButton" Command="{Binding RefreshDataCommand}"
+                        Background="#FF389EB9" BorderBrush="#FF3A6AB7" Foreground="White" FontWeight="Bold" FontFamily="Bauhaus 93" Content="Обновить" RenderTransformOrigin="0.5,0.5" Height="71" Width="74" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+                <Button Content="Сохранить" Style="{DynamicResource MaterialDesignFloatingActionButton}"  
+                        Width="74" Height="71"
+                        Background="#FF87B15E" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"  />
+                <Button Content="Добавить" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"  
+                    Width="112" Height="32"
+                    Background="#FFC0C141" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Click="Add_Button_Click"  />
+                <Button Content="Удалить" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"  
+                    Width="112" Height="32"
+                    Background="#FFC16441" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2"  />
+            </Grid>
+        </Border>
+
+
 
     </Grid>
 </Window>

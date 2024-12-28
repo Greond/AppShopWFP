@@ -1,9 +1,11 @@
 ﻿using MvvmHelpers;
+using MvvmHelpers.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using WpfAppTEST.Data;
 using WpfAppTEST.Models;
 
@@ -28,7 +30,18 @@ namespace WpfAppTEST
             OnPropertyChanged(nameof(Products));
             }
         }
-
+        private ICommand _refreshDataCommand;
+        public ICommand RefreshDataCommand
+        {
+            get
+            {
+                return _refreshDataCommand ?? (_refreshDataCommand = new MvvmHelpers.Commands.Command(() => 
+                {
+                    
+                    LoadData();
+                }));
+            }
+        }
         public MainWindowViewModel()
         {
             LoadData();
