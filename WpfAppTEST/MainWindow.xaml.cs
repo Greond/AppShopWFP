@@ -1,4 +1,7 @@
 ﻿using AppShopWFP;
+using AppShopWFP.Data;
+using MvvmHelpers;
+using System.Configuration;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfAppTEST
+namespace AppShopWFP
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -38,10 +41,20 @@ namespace WpfAppTEST
 
         }
 
-        private void Add_Button_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            AddProductWindow addProductWindow = new AddProductWindow();
-            addProductWindow.Show();
+
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var connectionStringsSection = (ConnectionStringsSection)config.GetSection("connectionStrings");
+            connectionStringsSection.ConnectionStrings["DefaultConnectionString"].ConnectionString = HttpRequest.BaseUrl;
+            config.Save();
+            ConfigurationManager.RefreshSection("connectionStrings");
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeUrlWindow changeUrlWindow = new ChangeUrlWindow(this.DataContext);
+            changeUrlWindow.Show();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Application x:Class="WpfAppTEST.App"
+﻿<Application x:Class="AppShopWFP.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WpfAppTEST"

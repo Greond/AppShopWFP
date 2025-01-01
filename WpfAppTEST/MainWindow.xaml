@@ -1,23 +1,25 @@
-﻿<Window x:Class="WpfAppTEST.MainWindow"
+﻿<Window x:Class="AppShopWFP.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfAppTEST"
+        xmlns:local="clr-namespace:AppShopWFP"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Style="{StaticResource MaterialDesignWindow}">
+        Style="{StaticResource MaterialDesignWindow}"
+        MinWidth="1200"
+        MinHeight="900" 
+        Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="261*"/>
+            <ColumnDefinition Width="139*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="33*"/>
         </Grid.RowDefinitions>
-
         <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"  ItemsSource="{Binding Products}" x:Name="MainDataGrid" 
                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedProduct}" CanUserAddRows="False">
             <DataGrid.RenderTransform>
@@ -30,46 +32,67 @@
             </DataGrid.RenderTransform>
         </DataGrid>
 
-        <Border Grid.Column="0" Grid.Row="1" >
-            <StackPanel x:Name="ElementPanel" DataContextChanged="ElementPanel_DataContextChanged"  DataContext="{Binding SelectedProduct}" Margin="2" >
-
-                <StackPanel.Resources>
-                    <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}" />
-                </StackPanel.Resources>
-
-                <TextBlock Text="Выбранный элемент" Style="{StaticResource MaterialDesignHeadline6TextBlock}"/>
-                <Separator Opacity="0" Height="10"/>
-                <TextBlock Text="ID" />
-                <TextBlock Text="{Binding ID}" Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
-                <Separator Opacity="0" Height="5"/>
-                <TextBlock Text="Наименование"  />
-                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
-                <Separator Opacity="0" Height="5"/>
-                <TextBlock Text="Описание" />
-                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
-                <Separator Opacity="0" Height="5"/>
-                <TextBlock Text="Цена" />
-                <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
-                <Separator Opacity="0" Height="5"/>
-                <TextBlock Text="Цена со скидкой" />
-                <TextBox Text="{Binding OldPrice, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
+        <Border Grid.Column="0" Grid.Row="1"  Margin="5,10,10,10" CornerRadius="10" BorderBrush="#FF673AB7" BorderThickness="1" >
+            <Grid x:Name="ElementPanel"  Margin="9,-1,2,-1" RenderTransformOrigin="0.493,0.486" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="171*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Выбранный элемент" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Grid.Row="0" Margin="5,10,0,0" />
+                <Button Grid.Column="0" Style="{StaticResource MaterialDesignFlatDarkBgButton}" Content="Изменить" Background="#FF49B73A" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ChangeProductCommand}"  />
+                <TextBlock Text="{Binding SelectedProduct.ID , StringFormat=Element ID: {0}}"  Style="{StaticResource MaterialDesignHeadline6TextBlock}" Grid.Row="1" Margin="5,0,0,0" />
+                <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ItemPropertyList" ItemsSource="{Binding Properties}" Grid.Row="2" Margin="0,5,0,0" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" MinWidth="140" />
+                                    <ColumnDefinition Width="auto" MinWidth="204.26"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="47*"/>
+                                    <RowDefinition Height="14*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="{Binding PropertyName}" Margin="6,10,6,0" Style="{StaticResource MaterialDesignHeadline6TextBlock}" FontSize="16" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" />
+                                <TextBox Text="{Binding PropertyValue}" Style="{StaticResource MaterialDesignFilledTextBox}" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" />
+                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Grid.ColumnSpan="3" Grid.Row="1" Margin="0,2,0,2" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="IsSelected" Value="False"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
         </Border>
         <Border BorderBrush="#FF673AB7" BorderThickness="1" Grid.Column="1" Margin="5,10,10,10" CornerRadius="10"  Grid.Row="1" >
-            <Grid Margin="0,0,-2,0">
+            <Grid Margin="0,0,9,9">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="125*"/>
-                    <ColumnDefinition Width="132*"/>
-                    <ColumnDefinition Width="128*"/>
+                    <ColumnDefinition Width="119*"/>
+                    <ColumnDefinition Width="142*"/>
+                    <ColumnDefinition Width="130*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="58*"/>
                     <RowDefinition Height="100*"/>
                     <RowDefinition Height="57*"/>
                 </Grid.RowDefinitions>
+                <Button Grid.Column="0" Content="изменить строку подключения API"  Grid.Row="0" Background="#FF852AB1" Margin="0,38,0,37" Click="Button_Click" />
                 <Button Style="{StaticResource MaterialDesignFloatingActionButton}" FontSize="14" Grid.Row="1" x:Name="RegreshButton" Command="{Binding RefreshDataCommand}"
-                        Background="#FF389EB9" BorderBrush="#FF3A6AB7" Foreground="White" FontWeight="Bold" FontFamily="Bauhaus 93" Content="Обновить" RenderTransformOrigin="0.5,0.5" Height="71" Width="74" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                        Background="#FF389EB9" BorderBrush="#FF3A6AB7" Foreground="White" FontWeight="Bold" FontFamily="Bauhaus 93" Content="Обновить" RenderTransformOrigin="0.5,0.5" Height="71" Width="74" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" >
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -82,12 +105,10 @@
                 <Button Content="Сохранить" Style="{DynamicResource MaterialDesignFloatingActionButton}"  
                         Width="74" Height="71"
                         Background="#FF87B15E" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"  />
-                <Button Content="Добавить" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"  
-                    Width="112" Height="32"
-                    Background="#FFC0C141" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Click="Add_Button_Click"  />
-                <Button Content="Удалить" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"  
-                    Width="112" Height="32"
-                    Background="#FFC16441" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2"  />
+                <Button Content="Добавить" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"  Command="{Binding AddProduct}"
+                    Background="#FFC0C141" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="1" Grid.Row="2" Height="32" VerticalAlignment="Center" HorizontalAlignment="Center" Width="112" />
+                <Button Content="Удалить" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"  Command="{Binding DeleteSelectedProduct}"
+                    Background="#FFC16441" BorderBrush="#FFEBFFC2" FontWeight="Bold" FontSize="14"  Grid.Column="2" Grid.Row="2" Height="32" VerticalAlignment="Center" HorizontalAlignment="Center" Width="112"  />
             </Grid>
         </Border>
 

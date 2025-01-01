@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualBasic;
+﻿using Microsoft.Windows.Themes;
+using MvvmHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,20 +13,22 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using AppShopWFP.Models;
 
 namespace AppShopWFP
 {
     /// <summary>
-    /// Логика взаимодействия для Window1.xaml
+    /// Логика взаимодействия для ChangeUrlWindow.xaml
     /// </summary>
-    public partial class AddProductWindow : Window
+    public partial class ChangeUrlWindow : Window
     {
-
-        public AddProductWindow()
+        public ChangeUrlWindow(object viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
+        }
+        private void CloseWindow(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
-    
 }

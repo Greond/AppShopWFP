@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfAppTEST.Models
+namespace AppShopWFP.Models
 {
     public class Item
     {

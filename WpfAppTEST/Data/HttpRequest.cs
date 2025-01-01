@@ -10,21 +10,23 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Security.Policy;
 using System.Windows;
-using WpfAppTEST.Models;
+using AppShopWFP.Models;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
-namespace WpfAppTEST.Data
+namespace AppShopWFP.Data
 {
     class HttpRequest
     {
         // https://192.168.1.101:7274/api
-        public const string BaseUrl = "https://192.168.1.101:7274/api";
+        public static string BaseUrl = "https://192.168.1.101:7274/api";
         //Items 
         public static async Task<Item> GetItemById(ulong ID)
         {
             bool ServerConnect = await WiFiConnection(); // Проверка на Wi-Fi подключение
             if (!ServerConnect)
             {
-                throw new Exception();
+                return null;
             }
             string url = BaseUrl + "/Items" + $"/{ID}";
             Item item = new Item();
@@ -57,7 +59,7 @@ namespace WpfAppTEST.Data
             bool ServerConnect = await WiFiConnection(); // Проверка на Wi-Fi подключение
             if (!ServerConnect)
             {
-                throw new Exception();
+                return null;
             }
             string url = BaseUrl + "/Items";
             List<Item> items = new List<Item>();
@@ -103,7 +105,7 @@ namespace WpfAppTEST.Data
             bool ServerConnect = await WiFiConnection(); // Проверка на Wi-Fi подключение
             if (!ServerConnect)
             {
-                throw new Exception();
+                return null;
             }
             string url = BaseUrl + "/Items";
             List<Item> items = new List<Item>();
@@ -140,7 +142,7 @@ namespace WpfAppTEST.Data
             bool ServerConnect = await WiFiConnection(); // Проверка на Wi-Fi подключение
             if (!ServerConnect)
             {
-                throw new Exception();
+                return null;
             }
             string url = BaseUrl + "/Items/Categories";
             List<ItemCategory> Categories = new List<ItemCategory>();
@@ -171,6 +173,53 @@ namespace WpfAppTEST.Data
                 throw new Exception(ex.Message);
             }
         }
+        public static async Task<object> SelectionFromUrl(string ConnStr)
+        {
+            bool ServerConnect = await WiFiConnection(); // Проверка на Wi-Fi подключение
+            if (!ServerConnect)
+            {
+                return null;
+            }
+            string url = ConnStr;
+            List<Object> items = new List<Object>();
+            try
+            {
+                Console.WriteLine("Try connect to WebApi");
+                HttpClientHandler clientHandler = new HttpClientHandler();
+                clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+                // Pass the handler to httpclient(from you are calling api)
+                HttpClient client = new HttpClient(clientHandler);
+                client.BaseAddress = new Uri(url);
+                HttpResponseMessage response = await client.GetAsync(client.BaseAddress);
+                Console.WriteLine(response.Content);
+                response.EnsureSuccessStatusCode(); // выброс исключения, если произошла ошибка
+                // десериализация ответа в формате json
+                var content = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    JArray arr = JArray.Parse(content);
+                    foreach (var item in arr)
+                    {
+                        Object rcvdData = JsonConvert.DeserializeObject<Object>(item.ToString());
+                        items.Add(rcvdData);
+                    }
+                    //seccuses
+                    return items;
+                }
+                catch
+                {
+                    JObject obj = JObject.Parse(content);
+                    object item = JsonConvert.DeserializeObject<Object>(obj.ToString());
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
         public async static Task<bool> WiFiConnection()
         {
             string testUrl = BaseUrl + "/Items/Test";
@@ -192,7 +241,7 @@ namespace WpfAppTEST.Data
             }
             catch
             {
-                MessageBox.Show("Something wet wrong. Check BaseUrl.");
+                MessageBox.Show("Something wet wrong. Check ApiUrl.");
                 return false;
             }
         }
